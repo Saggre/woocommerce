@@ -56,7 +56,7 @@ function wc_update_200_permalinks() {
 
 	if ( empty( $permalinks ) && $shop_page_id > 0 ) {
 
-		$base_slug = $shop_page_id > 0 && get_post( $shop_page_id ) ? get_page_uri( $shop_page_id ) : 'shop';
+		$base_slug = get_post( $shop_page_id ) ? get_page_uri( $shop_page_id ) : 'shop';
 
 		$category_base = 'yes' === get_option( 'woocommerce_prepend_shop_page_to_urls' ) ? trailingslashit( $base_slug ) : '';
 		$category_slug = get_option( 'woocommerce_product_category_slug' ) ? get_option( 'woocommerce_product_category_slug' ) : _x( 'product-category', 'slug', 'woocommerce' );
