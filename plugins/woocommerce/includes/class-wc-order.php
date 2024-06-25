@@ -315,20 +315,21 @@ class WC_Order extends WC_Abstract_Order {
 	 * This ensures the data exists even if a gateway does not use the
 	 * `payment_complete` method.
 	 *
+	 * @param string|integer|null $date UTC timestamp, or ISO 8601 DateTime. If the DateTime string has no timezone or offset, WordPress site timezone will be assumed. Null for current time.
 	 * @since 3.0.0
 	 */
-	public function maybe_set_date_paid() {
+	public function maybe_set_date_paid( $date = null ) {
 		// This logic only runs if the date_paid prop has not been set yet.
 		if ( ! $this->get_date_paid( 'edit' ) ) {
 			$payment_completed_status = apply_filters( 'woocommerce_payment_complete_order_status', $this->needs_processing() ? 'processing' : 'completed', $this->get_id(), $this );
 
 			if ( $this->has_status( $payment_completed_status ) ) {
 				// If payment complete status is reached, set paid now.
-				$this->set_date_paid( time() );
+				$this->set_date_paid( $date ? $date : time() );
 
 			} elseif ( 'processing' === $payment_completed_status && $this->has_status( 'completed' ) ) {
 				// If payment complete status was processing, but we've passed that and still have no date, set it now.
-				$this->set_date_paid( time() );
+				$this->set_date_paid( $date ? $date : time() );
 			}
 		}
 	}

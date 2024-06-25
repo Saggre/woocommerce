@@ -2589,13 +2589,9 @@ FROM $order_meta_table
 		$previous_status = ArrayUtil::get_value_or_default( $order->get_data(), 'status' );
 		$changes         = $order->get_changes();
 
-		// Before updating, ensure date paid is set if missing.
-		if (
-			! $order->get_date_paid( 'edit' )
-			&& version_compare( $order->get_version( 'edit' ), '3.0', '<' )
-			&& $order->has_status( apply_filters( 'woocommerce_payment_complete_order_status', $order->needs_processing() ? 'processing' : 'completed', $order->get_id(), $order ) ) // phpcs:ignore WooCommerce.Commenting.CommentHooks.MissingHookComment
-		) {
-			$order->set_date_paid( $order->get_date_created( 'edit' ) );
+		if ( version_compare( $order->get_version( 'edit' ), '3.0', '<' ) ) {
+			// Before updating, ensure date paid is set if missing.
+			$order->maybe_set_date_paid( $order->get_date_created( 'edit' ) );
 		}
 
 		if ( null === $order->get_date_created( 'edit' ) ) {
